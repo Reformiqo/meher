@@ -123,7 +123,7 @@ app_license = "mit"
 # Hook on document methods and events
 
 doc_events = {
-	"Purchase Receipt": {
+	"Delivery Note": {
 		"on_submit": "meher.utilis.update_item_batch",
 	}
 }

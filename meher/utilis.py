@@ -20,13 +20,19 @@ def get_item_batch(batch, container_no):
 def update_item_batch(doc, method=None):
     inv = frappe.get_doc("Purchase Receipt", doc)
 
-    for item in inv.items:
-        batch = frappe.get_doc("Batch", item.batch_no)
-        batch.custom_supplier_batch_no = item.supplier_batch_no
-        batch.custom_container_no = inv.custom_container_no
-        batch.custom_cone = item.cone
-        batch.custom_net_weight = item.qty
-        batch.custom_lot_no = inv.custom_lot_no
+    for item in doc.items:
+        try:      
+            batch = frappe.get_doc("Batch", item.batch_no)
+            batch.custom_supplier_batch_no = item.supplier_batch_no
+            batch.custom_container_no = doc.custom_container_no
+            batch.custom_cone = item.cone
+            batch.custom_net_weight = item.qty
+            batch.custom_lot_no = doc.custom_lot_number
+        except Exception as e:
+            frappe.throw(f"Error updating batch {item.batch_no}: {e}")
 
         batch.save()
         frappe.db.commit()
+
+
+ 
